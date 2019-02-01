@@ -142,14 +142,14 @@ class KnowledgeBase(object):
         """
         ####################################################
         # Student code goes here
-        def add_supported_by(f_or_r, space):
+        def get_supported_by(f_or_r, indent):
             ret_string = ""
             for x in f_or_r.supported_by:
-                ret_string += "\n" + "".join(" " for i in range(space-2)) + "SUPPORTED BY"
-                ret_string += "\n" + "".join(" " for i in range(space)) + "fact: " + str(x[0].statement)
-                ret_string += " ASSERTED" if x[0].asserted else add_supported_by(x[0], space+4)
-                ret_string += "\n" + "".join(" " for i in range(space)) + "rule: (" + ", ".join(str(s) for s in x[1].lhs) + ") -> " + str(x[1].rhs)
-                ret_string += " ASSERTED" if x[1].asserted else add_supported_by(x[1], space+4)
+                ret_string += "\n" + indent + "  SUPPORTED BY"
+                ret_string += "\n" + indent + "    fact: " + str(x[0].statement)
+                ret_string += " ASSERTED" if x[0].asserted else get_supported_by(x[0], indent + "    ")
+                ret_string += "\n" + indent + "    rule: (" + ", ".join(str(s) for s in x[1].lhs) + ") -> " + str(x[1].rhs)
+                ret_string += " ASSERTED" if x[1].asserted else get_supported_by(x[1], indent + "    ")
             return ret_string
 
         if isinstance(fact_or_rule, Fact):
@@ -157,14 +157,14 @@ class KnowledgeBase(object):
             if fact_or_rule in self.facts:
                 fact_to_explain = self.facts[self.facts.index(fact_or_rule)]
                 ret_string = "fact: " + str(fact_to_explain.statement)
-                ret_string += add_supported_by(fact_to_explain, 4)
+                ret_string += get_supported_by(fact_to_explain, "")
             return ret_string
         elif isinstance(fact_or_rule, Rule):
             ret_string = "Rule is not in the KB"
             if fact_or_rule in self.rules:
                 rule_to_explain = self.rules[self.rules.index(fact_or_rule)]
                 ret_string = "rule: (" + ", ".join(str(s) for s in rule_to_explain.lhs) + ") -> " + str(rule_to_explain.rhs)
-                ret_string += add_supported_by(rule_to_explain, 4)
+                ret_string += get_supported_by(rule_to_explain, "")
             return ret_string
         return False
         
