@@ -157,14 +157,14 @@ class KnowledgeBase(object):
             if fact_or_rule in self.facts:
                 fact_to_explain = self.facts[self.facts.index(fact_or_rule)]
                 ret_string = "fact: " + str(fact_to_explain.statement)
-                ret_string += get_supported_by(fact_to_explain, "")
+                ret_string += " ASSERTED" if fact_to_explain.asserted else get_supported_by(fact_to_explain, "")
             return ret_string
         elif isinstance(fact_or_rule, Rule):
             ret_string = "Rule is not in the KB"
             if fact_or_rule in self.rules:
                 rule_to_explain = self.rules[self.rules.index(fact_or_rule)]
                 ret_string = "rule: (" + ", ".join(str(s) for s in rule_to_explain.lhs) + ") -> " + str(rule_to_explain.rhs)
-                ret_string += get_supported_by(rule_to_explain, "")
+                ret_string += " ASSERTED" if rule_to_explain.asserted else get_supported_by(rule_to_explain, "")
             return ret_string
         return False
         
